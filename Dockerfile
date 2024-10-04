@@ -56,10 +56,15 @@ ENV LIBRARY_PATH /usr/local/cuda/lib64/stubs:${LIBRARY_PATH}
 
 RUN /opt/docker/install-beagle.sh
 
-RUN /opt/docker/install-zigzag.sh
+# RUN /opt/docker/install-zigzag.sh
 
 RUN /opt/docker/install-beast.sh
 
 ENV BEAST="/usr/local"
+
+COPY beast /usr/local/bin/beast
+RUN chmod +x /usr/local/bin/beast
+
+RUN beast -beagle_info
 
 CMD ["/bin/bash"]
