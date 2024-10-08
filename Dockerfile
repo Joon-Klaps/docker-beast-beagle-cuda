@@ -1,4 +1,4 @@
-FROM nvidia/cuda:12.1.1-devel-ubuntu22.04
+FROM nvidia/cuda:11.7.1-devel-ubuntu22.04
 
 # CUDA version must be compatible with driver version of host:
 #       via: https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html
