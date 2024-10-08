@@ -1,4 +1,4 @@
-FROM nvidia/cuda:11.0.3-devel-ubuntu20.04
+FROM nvidia/cuda:12.6.1-devel-ubuntu24.04
 
 # CUDA version must be compatible with driver version of host:
 #       via: https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html
@@ -56,7 +56,7 @@ ENV LIBRARY_PATH /usr/local/cuda/lib64/stubs:${LIBRARY_PATH}
 
 RUN /opt/docker/install-beagle.sh
 
-# RUN /opt/docker/install-zigzag.sh
+RUN /opt/docker/install-zigzag.sh
 
 RUN /opt/docker/install-beast.sh
 

@@ -25,4 +25,4 @@ fi
 BEAST_LIB="$BEAST/lib"
 BEAST_PLUG="$BEAST/plugins"
 
-java -Xms64m -Xmx2048m -Dbeast.plugins.dir="$BEAST_PLUG" -Djava.library.path="$BEAST_LIB:/usr/local/lib:$LD_LIBRARY_PATH" -cp "$BEAST_LIB/beast.jar" dr.app.beast.BeastMain $*
+java -Xms1024m -Xmx32g -Dbeast.plugins.dir="$BEAST_PLUG" -Djava.library.path="$BEAST_LIB:/usr/local/lib:$LD_LIBRARY_PATH" -cp "$BEAST_LIB/beast.jar" dr.app.beast.BeastMain $*
