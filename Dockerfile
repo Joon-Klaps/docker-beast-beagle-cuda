@@ -40,12 +40,11 @@ FROM nvidia/cuda:12.1.1-devel-ubuntu22.04
 LABEL maintainer "Daniel Park <dpark@broadinstitute.org>"
 LABEL maintainer_other "Christopher Tomkins-Tinch <tomkinsc@broadinstitute.org>"
 
-COPY install-*.sh /opt/docker/
-
 # System packages, Google Cloud SDK, and locale
 # ca-certificates and wget needed for gosu
 # bzip2, liblz4-toolk, and pigz are useful for packaging and archival
 # google-cloud-sdk needed when using this in GCE
+COPY install-apt_packages.sh /opt/docker/install-apt_packages.sh
 RUN /opt/docker/install-apt_packages.sh
 
 # Set default locale to en_US.UTF-8
@@ -54,10 +53,13 @@ ENV LD_LIBRARY_PATH /usr/local/lib:${LD_LIBRARY_PATH}
 ENV PKG_CONFIG_PATH /usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
 ENV LIBRARY_PATH /usr/local/cuda/lib64/stubs:${LIBRARY_PATH}
 
+COPY install-beagle.sh /opt/docker/install-beagle.sh
 RUN /opt/docker/install-beagle.sh
 
+COPY install-zigzag.sh /opt/docker/install-zigzag.sh
 RUN /opt/docker/install-zigzag.sh
 
+COPY install-beast.sh /opt/docker/install-beast.sh
 RUN /opt/docker/install-beast.sh
 
 ENV BEAST="/usr/local"

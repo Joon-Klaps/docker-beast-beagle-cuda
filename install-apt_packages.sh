@@ -18,6 +18,7 @@ apt-get install -y -qq \
 	dirmngr \
 	libtbb-dev \
 	liblz4-tool pigz bzip2 lbzip2 zstd \
+	libeigen3-dev \
 	cmake build-essential autoconf automake libtool git pkg-config \
 	ant \
 	openjdk-11-jre openjdk-11-jdk
