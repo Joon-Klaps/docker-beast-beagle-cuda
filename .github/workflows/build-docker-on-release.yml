@@ -1,0 +1,61 @@
+name: Monitor beast-mcmc repo, Update version, Build and Push Docker Image
+
+on:
+    schedule:
+        - cron: "0 1 * * *" # Run every day at 01:00 UTC
+    pull_request_target:
+        types: [opened]
+        branches:
+            - master
+    workflow_dispatch:
+
+jobs:
+    build-and-push:
+        name: Rename the version and build to docker hub
+        runs-on: ubuntu-latest
+        env:
+            DOCKERHUB_PASS: ${{ secrets.DOCKERHUB_PASS }}
+            GITHUB_TOKEN: ${{ secrets.KLAPS_BOT_AUTH_TOKEN }}
+        steps:
+            - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+              with:
+                  token: ${{ env.GITHUB_TOKEN }}
+
+            - name: Get latest release information
+              id: latest_release
+              run: |
+                  latest_release=$(curl -L -H "Accept: application/vnd.github+json" -H "Authorization: Bearer ${{ env.GITHUB_TOKEN }}" -H "X-GitHub-Api-Version: 2022-11-28" https://api.github.com/repos/beast-dev/beast-mcmc/releases)
+                  echo "tag_name=$(echo $latest_release | jq -r '.tag_name')" >> $GITHUB_ENV
+                  echo "tgz_url=$(echo $latest_release | jq -r '.assets[] | select(.name | endswith(".tgz")) | .url')" >> $GITHUB_ENV
+
+            - name: Update install-beast.sh
+              run: |
+                  sed -i "s/BEAST_VERSION='.*'/BEAST_VERSION='${{ env.tag_name }}'/g" ${GITHUB_WORKSPACE}/install-beast.sh
+                  sed -i "s/BROWSER_DOWNLOAD_URL='.*'/BROWSER_DOWNLOAD_URL='${{ env.tgz_url }}'/g" ${GITHUB_WORKSPACE}/install-beast.sh
+
+            - name: Check if install-beast.sh has been updated
+              run: |
+                  git diff --exit-code ${GITHUB_WORKSPACE}/install-beast.sh || echo "changed=YES" >> $GITHUB_ENV
+                  echo "File changed: ${{ env.changed }}"
+
+            - name: Commit and push changes
+              if: env.changed == 'YES'
+              run: |
+                  git config user.email "167566642+Klaps-bot@users.noreply.github.com"
+                  git config user.name "Klaps-bot"
+                  git config push.default current
+                  git add ${GITHUB_WORKSPACE}/install-beast.sh
+                  git commit -m "[automated] Update install-beast.sh with ${{ env.tag_name }}"
+                  git push
+
+            - name: Build Docker image
+              if: env.changed == 'YES'
+              run: |
+                  docker build --no-cache . -t jklaps/beast_beagle_cuda:${{ env.tag_name }} -t jklaps/beast_beagle_cuda:latest
+
+            - name: Push Docker images to DockerHub
+              if: env.changed == 'YES'
+              run: |
+                  echo "$DOCKERHUB_PASS" | docker login -u jklaps --password-stdin
+                  docker push jklaps/beast-beagle-cuda:${{ env.tag_name }}
+                  docker push jklaps/beast-beagle-cuda:latest
