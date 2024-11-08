@@ -3,10 +3,6 @@ name: Monitor beast-mcmc repo, Update version, Build and Push Docker Image
 on:
     schedule:
         - cron: "0 1 * * *" # Run every day at 01:00 UTC
-    pull_request_target:
-        types: [opened]
-        branches:
-            - master
     workflow_dispatch:
 
 jobs:
