@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# This is only a demonstration of how to run beast via dsub. 
-# The accelerator (GPU) type and count should be set according to 
+# This is only a demonstration of how to run beast via dsub.
+# The accelerator (GPU) type and count should be set according to
 # the size of the data and number of partitions.
 
 # --accelerator-count should scale with number of partitions in data
 # --nvidia-driver-version must match compatible CUDA version
-# 
+#
 
 GPU_TYPE="nvidia-tesla-p4" # see: https://cloud.google.com/compute/docs/gpus/
 DOCKER_IMAGE="quay.io/broadinstitute/beast-beagle-cuda"
@@ -115,17 +115,17 @@ if [ -z "$4" ]; then
     partitions_that_fit="$((${number_of_partitions}/${NUM_GPUS}))"
     extra_partitions="$((${number_of_partitions}%${NUM_GPUS}))"
 
-    for i in $(seq 1 ${partitions_that_fit}); do 
+    for i in $(seq 1 ${partitions_that_fit}); do
       partition_string="${partition_string}$(echo $(seq 1 ${NUM_GPUS})) "
     done
     if [[ ${extra_partitions} > 0 ]]; then
       partition_string="${partition_string} $(echo $(seq 1 ${extra_partitions}))"
     fi
-    
+
   else
-    # if no GPUs are specified, set all partitions to be on 
+    # if no GPUs are specified, set all partitions to be on
     # resource 0 (CPU)
-    for i in $(seq 1 ${number_of_partitions}); do 
+    for i in $(seq 1 ${number_of_partitions}); do
       partition_string="${partition_string}0,"
     done
   fi

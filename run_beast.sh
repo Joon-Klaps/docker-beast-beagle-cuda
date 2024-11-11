@@ -16,12 +16,12 @@ if [ -z "${INPUT_FILE}" ]; then
     exit 1
 fi
 
-pwd 
+pwd
 cd $OUT_DIR
 # report beagle info including number of GPUs
 beast -beagle_info > "${OUTPUT_PREFIX}.out"
 # report CPU info
 lscpu | tee -a "${OUTPUT_PREFIX}.out"
-pwd 
+pwd
 beast -beagle_multipartition off -beagle_GPU -beagle_cuda -beagle_double -beagle_scaling always -beagle_order ${BEAGLE_ORDER} ${BEAST_EXTRA_ARGS} ${INPUT_FILE} >> "${OUTPUT_PREFIX}.out"
-ls 
+ls
