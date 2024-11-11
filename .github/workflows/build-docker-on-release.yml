@@ -29,7 +29,7 @@ jobs:
                     > release_info.json
 
                   # Extract tag name and tgz url, handling potential null or missing values
-                  tag_name=$(cat release_info.json | jq -r '.[0].tag_name')
+                  tag_name=$(cat release_info.json | jq -r '.[0].TAG_NAME')
                   echo "Tag name: $tag_name"
                   tgz_url=$(cat release_info.json | jq -r '.[0].assets[] | select(.name | endswith(".tgz")) | .browser_download_url')
                   echo "tgz_url: $tgz_url"
@@ -46,45 +46,45 @@ jobs:
                   fi
 
                   # Set outputs
-                  echo "tag_name=$tag_name" >> $GITHUB_OUTPUT
-                  echo "tgz_url=$tgz_url" >> $GITHUB_OUTPUT
-                  rm -f relase_info.json
+                  echo "TAG_NAME=$tag_name" >> $GITHUB_ENV
+                  echo "TGZ_URL=$tgz_url" >> $GITHUB_ENV
+                  rm -f release_info.json
 
             - name: Update install-beast.sh
               run: |
-                  sed -i "s/BEAST_VERSION='.*'/BEAST_VERSION='${{ env.tag_name }}'/g" ${GITHUB_WORKSPACE}/install-beast.sh
-                  sed -i "s/BROWSER_DOWNLOAD_URL='.*'/BROWSER_DOWNLOAD_URL='${{ env.tgz_url }}'/g" ${GITHUB_WORKSPACE}/install-beast.sh
+                  sed -i "s/BEAST_VERSION='.*'/BEAST_VERSION='${{ env.TAG_NAME }}'/g" ${GITHUB_WORKSPACE}/install-beast.sh
+                  sed -i "s/BROWSER_DOWNLOAD_URL='.*'/BROWSER_DOWNLOAD_URL='${{ env.TGZ_URL }}'/g" ${GITHUB_WORKSPACE}/install-beast.sh
 
             - name: Check if install-beast.sh has been updated
               run: |
-                  git diff --exit-code ${GITHUB_WORKSPACE}/install-beast.sh || echo "changed=YES" >> $GITHUB_ENV
-                  echo "File changed: ${{ env.changed }}"
+                  git diff --exit-code ${GITHUB_WORKSPACE}/install-beast.sh || echo "CHANGED=YES" >> $GITHUB_ENV
+                  echo "File changed: ${{ env.CHANGED }}"
 
             - name: Build Docker image
-              if: env.changed == 'YES'
+              if: env.CHANGED == 'YES'
               run: |
                   echo "$DOCKERHUB_PASS" | docker login -u jklaps --password-stdin
-                  docker build --no-cache . -t jklaps/beast_beagle_cuda:${{ env.tag_name }} -t jklaps/beast_beagle_cuda:latest
+                  docker build --no-cache . -t jklaps/beast_beagle_cuda:${{ env.TAG_NAME }} -t jklaps/beast_beagle_cuda:latest
 
             - name: Push Docker images to DockerHub
-              if: env.changed == 'YES'
+              if: env.CHANGED == 'YES'
               run: |
                   echo "$DOCKERHUB_PASS" | docker login -u jklaps --password-stdin
-                  docker push jklaps/beast-beagle-cuda:${{ env.tag_name }}
+                  docker push jklaps/beast-beagle-cuda:${{ env.TAG_NAME }}
                   docker push jklaps/beast-beagle-cuda:latest
 
             - name: Update readme.sh
-              if: env.changed == 'YES'
+              if: env.CHANGED == 'YES'
               run: |
-                  sed -i "s/LATEST_VERSION = '.*'/LATEST_VERSION = '${{ env.tag_name }}'/g" ${GITHUB_WORKSPACE}/readme.md
+                  sed -i "s/LATEST_VERSION = '.*'/LATEST_VERSION = '${{ env.TAG_NAME }}'/g" ${GITHUB_WORKSPACE}/readme.md
 
             - name: Commit and push changes
-              if: env.changed == 'YES'
+              if: env.CHANGED == 'YES'
               run: |
                   git config user.email "167566642+Klaps-bot@users.noreply.github.com"
                   git config user.name "Klaps-bot"
                   git config push.default current
                   git add ${GITHUB_WORKSPACE}/install-beast.sh
                   git add ${GITHUB_WORKSPACE}/readme.md
-                  git commit -m "[automated] Update install-beast.sh with ${{ env.tag_name }}"
+                  git commit -m "[automated] Update install-beast.sh with ${{ env.TAG_NAME }}"
                   git push
