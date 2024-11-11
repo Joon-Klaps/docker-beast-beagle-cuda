@@ -52,8 +52,8 @@ jobs:
 
             - name: Update install-beast.sh
               run: |
-                  sed -i "s/BEAST_VERSION='.*'/BEAST_VERSION='${{ env.TAG_NAME }}'/g" ${GITHUB_WORKSPACE}/install-beast.sh
-                  sed -i "s/BROWSER_DOWNLOAD_URL='.*'/BROWSER_DOWNLOAD_URL='${{ env.TGZ_URL }}'/g" ${GITHUB_WORKSPACE}/install-beast.sh
+                  sed -i "s#BEAST_VERSION='.*'#BEAST_VERSION='${{ env.TAG_NAME }}'#g" ${GITHUB_WORKSPACE}/install-beast.sh
+                  sed -i "s#BROWSER_DOWNLOAD_URL='.*'#BROWSER_DOWNLOAD_URL='${{ env.TGZ_URL }}'#g" ${GITHUB_WORKSPACE}/install-beast.sh
 
             - name: Check if install-beast.sh has been updated
               run: |
