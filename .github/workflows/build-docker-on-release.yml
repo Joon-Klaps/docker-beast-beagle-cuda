@@ -50,10 +50,11 @@ jobs:
                   echo "TGZ_URL=$tgz_url" >> $GITHUB_ENV
                   rm -f release_info.json
 
-            - name: Update install-beast.sh
+            - name: Update install-beast.sh & readme.md
               run: |
                   sed -i "s#BEAST_VERSION='.*'#BEAST_VERSION='${{ env.TAG_NAME }}'#g" ${GITHUB_WORKSPACE}/install-beast.sh
                   sed -i "s#BROWSER_DOWNLOAD_URL='.*'#BROWSER_DOWNLOAD_URL='${{ env.TGZ_URL }}'#g" ${GITHUB_WORKSPACE}/install-beast.sh
+                  sed -i "s#LATEST_VERSION = '.*'#LATEST_VERSION = '${{ env.TAG_NAME }}'#g" ${GITHUB_WORKSPACE}/README.md
 
             - name: Check if install-beast.sh has been updated
               run: |
@@ -72,12 +73,6 @@ jobs:
                   echo "$DOCKERHUB_PASS" | docker login -u jklaps --password-stdin
                   docker push jklaps/beast_beagle_cuda:${{ env.TAG_NAME }}
                   docker push jklaps/beast_beagle_cuda:latest
-
-            - name: Update readme.md
-              if: env.CHANGED == 'YES'
-              run: |
-                  sed -i "s/LATEST_VERSION = '.*'/LATEST_VERSION = '${{ env.TAG_NAME }}'/g" ${GITHUB_WORKSPACE}/readme.md
-
             - name: Commit and push changes
               if: env.CHANGED == 'YES'
               run: |
@@ -85,6 +80,6 @@ jobs:
                   git config user.name "Klaps-bot"
                   git config push.default current
                   git add ${GITHUB_WORKSPACE}/install-beast.sh
-                  git add ${GITHUB_WORKSPACE}/readme.md
+                  git add ${GITHUB_WORKSPACE}/README.md
                   git commit -m "[automated] Update install-beast.sh with ${{ env.TAG_NAME }}"
                   git push
