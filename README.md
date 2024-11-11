@@ -2,13 +2,13 @@
 
 GPU-accelerated Docker images containing [BEAST](http://beast.community/about) and [BEAGLE](http://beast.community/beagle), compiled with [NVIDIA CUDA](https://developer.nvidia.com/cuda-zone) support.
 
+LATEST_VERSION = '1.10.5pre_thorney_0.1.2'
+
 See https://hub.docker.com/r/jklaps/beast-beagle-cuda for all created versions.
 
-**LATEST_VERSION = '1.10.5pre_thorney_0.1.2'**
+## Singularity
 
-## Instructions:
-
-### Singularity
+[![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
 
 ```bash
 singularity exec --nv -B $PWD docker://jklaps/beast-beagle-cuda:latest \
@@ -19,7 +19,9 @@ singularity exec --nv -B $PWD docker://jklaps/beast-beagle-cuda:latest \
     > beast.out
 ```
 
-### Docker
+## Docker
+
+[![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 
 ```bash
 docker run --gpus all --mount type=bind,source=$PWD,target=/. jklaps/beast-beagle-cuda:latest \
