@@ -70,8 +70,8 @@ jobs:
               if: env.CHANGED == 'YES'
               run: |
                   echo "$DOCKERHUB_PASS" | docker login -u jklaps --password-stdin
-                  docker push jklaps/beast-beagle-cuda:${{ env.TAG_NAME }}
-                  docker push jklaps/beast-beagle-cuda:latest
+                  docker push jklaps/beast_beagle_cuda:${{ env.TAG_NAME }}
+                  docker push jklaps/beast_beagle_cuda:latest
 
             - name: Update readme.sh
               if: env.CHANGED == 'YES'
