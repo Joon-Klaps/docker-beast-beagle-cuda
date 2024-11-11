@@ -8,8 +8,7 @@ DEBIAN_FRONTEND=noninteractive
 echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 
 # Add some basics
-apt-get update
-#--no-install-recommends
+apt-get update --no-install-recommends
 # See here for packages required to build beagle:
 #   https://github.com/beagle-dev/beagle-lib/wiki/LinuxInstallInstructions
 
@@ -17,6 +16,7 @@ apt-get install -y -qq \
 	lsb-release ca-certificates wget rsync curl \
 	less nano vim git locales make \
 	dirmngr \
+	libtbb-dev \
 	liblz4-tool pigz bzip2 lbzip2 zstd \
 	cmake build-essential autoconf automake libtool git pkg-config \
 	ant \
@@ -34,7 +34,7 @@ echo "Debian platform: $DEBIAN_PLATFORM"
 
 # Add source for gcloud sdk
 echo "deb http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-# The line below is commented out since there is not a "focal" build of cloud-sdk in the apt repo (20.04); 
+# The line below is commented out since there is not a "focal" build of cloud-sdk in the apt repo (20.04);
 #   remove the line above and uncomment below when available.
 # echo "deb http://packages.cloud.google.com/apt cloud-sdk-$DEBIAN_PLATFORM main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
 
