@@ -65,14 +65,14 @@ jobs:
               if: env.CHANGED == 'YES'
               run: |
                   echo "$DOCKERHUB_PASS" | docker login -u jklaps --password-stdin
-                  docker build --no-cache . -t jklaps/beast_beagle_cuda:${{ env.TAG_NAME }} -t jklaps/beast_beagle_cuda:latest
+                  docker build --no-cache . -t jklaps/beast-beagle-cuda:${{ env.TAG_NAME }} -t jklaps/beast-beagle-cuda:latest
 
             - name: Push Docker images to DockerHub
               if: env.CHANGED == 'YES'
               run: |
                   echo "$DOCKERHUB_PASS" | docker login -u jklaps --password-stdin
-                  docker push jklaps/beast_beagle_cuda:${{ env.TAG_NAME }}
-                  docker push jklaps/beast_beagle_cuda:latest
+                  docker push jklaps/beast-beagle-cuda:${{ env.TAG_NAME }}
+                  docker push jklaps/beast-beagle-cuda:latest
             - name: Commit and push changes
               if: env.CHANGED == 'YES'
               run: |
