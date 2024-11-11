@@ -1,7 +1,7 @@
 #!/bin/bash
 
-BEAST_VERSION='1.10.5pre_thorney_0.1.2'
-BROWSER_DOWNLOAD_URL='https://github.com/beast-dev/beast-mcmc/releases/download/v1.10.5pre_thorney_v0.1.2/BEASTv1.10.5pre_thorney_0.1.2.tgz'
+BEAST_VERSION=''
+BROWSER_DOWNLOAD_URL=''
 # uncomment when out of pre-release:
 wget --quiet ${BROWSER_DOWNLOAD_URL} -O BEAST${BEAST_VERSION}.tgz
 
