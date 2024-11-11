@@ -2,7 +2,9 @@
 
 GPU-accelerated Docker images containing [BEAST](http://beast.community/about) and [BEAGLE](http://beast.community/beagle), compiled with [NVIDIA CUDA](https://developer.nvidia.com/cuda-zone) support.
 
-See https://hub.docker.com/r/jklaps/beast-beagle-cuda for all created versions
+See https://hub.docker.com/r/jklaps/beast-beagle-cuda for all created versions.
+
+**LATEST_VERSION = '1.10.5pre_thorney_0.1.2'**
 
 ## Instructions:
 

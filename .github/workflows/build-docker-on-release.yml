@@ -30,7 +30,9 @@ jobs:
 
                   # Extract tag name and tgz url, handling potential null or missing values
                   tag_name=$(cat release_info.json | jq -r '.[0].tag_name')
+                  echo "Tag name: $tag_name"
                   tgz_url=$(cat release_info.json | jq -r '.[0].assets[] | select(.name | endswith(".tgz")) | .browser_download_url')
+                  echo "tgz_url: $tgz_url"
 
                   # Validate outputs
                   if [ -z "$tag_name" ] || [ "$tag_name" = "null" ]; then
@@ -71,6 +73,11 @@ jobs:
                   docker push jklaps/beast-beagle-cuda:${{ env.tag_name }}
                   docker push jklaps/beast-beagle-cuda:latest
 
+            - name: Update readme.sh
+              if: env.changed == 'YES'
+              run: |
+                  sed -i "s/LATEST_VERSION = '.*'/LATEST_VERSION = '${{ env.tag_name }}'/g" ${GITHUB_WORKSPACE}/readme.md
+
             - name: Commit and push changes
               if: env.changed == 'YES'
               run: |
@@ -78,5 +85,6 @@ jobs:
                   git config user.name "Klaps-bot"
                   git config push.default current
                   git add ${GITHUB_WORKSPACE}/install-beast.sh
+                  git add ${GITHUB_WORKSPACE}/readme.md
                   git commit -m "[automated] Update install-beast.sh with ${{ env.tag_name }}"
                   git push
