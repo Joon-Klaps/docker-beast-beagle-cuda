@@ -1,5 +1,4 @@
 # beast-beagle-cuda
-
 GPU-accelerated Docker images containing [BEAST](http://beast.community/about) and [BEAGLE](http://beast.community/beagle), compiled with [NVIDIA CUDA](https://developer.nvidia.com/cuda-zone) support.
 This repository tracks the releases of the [BEAST-repo](https://github.com/beast-dev/beast-mcmc) for building the containers. 
 
