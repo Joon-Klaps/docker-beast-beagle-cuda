@@ -41,28 +41,36 @@ LABEL maintainer "Joon Klaps <joon.klaps@kuleuven.be>"
 LABEL maintainer_other "Daniel Park <dpark@broadinstitute.org>"
 LABEL maintainer_other "Christopher Tomkins-Tinch <tomkinsc@broadinstitute.org>"
 
-COPY install-*.sh /opt/docker/
+# Set default locale to en_US.UTF-8 and library paths
+ENV LANG="en_US.UTF-8" LANGUAGE="en_US:en" LC_ALL="en_US.UTF-8" \
+    LD_LIBRARY_PATH="/usr/local/lib:${LD_LIBRARY_PATH}" \
+    PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:${PKG_CONFIG_PATH}" \
+    LIBRARY_PATH="/usr/local/cuda/lib64/stubs:${LIBRARY_PATH}" \
+    DEBIAN_FRONTEND="noninteractive"
 
-# System packages, Google Cloud SDK, and locale
-# ca-certificates and wget needed for gosu
-# bzip2, liblz4-toolk, and pigz are useful for packaging and archival
-# google-cloud-sdk needed when using this in GCE
+# Step 1: Install system packages (least likely to change)
+COPY install-apt_packages.sh /opt/docker/
 RUN /opt/docker/install-apt_packages.sh
 
-# Set default locale to en_US.UTF-8
-ENV LANG="en_US.UTF-8" LANGUAGE="en_US:en" LC_ALL="en_US.UTF-8"
-ENV LD_LIBRARY_PATH /usr/local/lib:${LD_LIBRARY_PATH}
-ENV PKG_CONFIG_PATH /usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
-ENV LIBRARY_PATH /usr/local/cuda/lib64/stubs:${LIBRARY_PATH}
-
+# Step 2: Install BEAGLE library
+COPY install-beagle.sh /opt/docker/
 RUN /opt/docker/install-beagle.sh
-
-# RUN /opt/docker/install-zigzag.sh
-
-RUN /opt/docker/install-beast.sh
 
 ENV BEAST="/usr/local"
 
+# COPY install-beast-from-source.sh /opt/docker/
+# RUN /opt/docker/install-beast-from-source.sh
+
+# COPY install-zigzag.sh /opt/docker/
+# RUN /opt/docker/install-zigzag.sh
+
+COPY install-beast.sh /opt/docker/
+RUN /opt/docker/install-beast.sh
+
+# COPY beast /usr/local/bin/
+# RUN chmod +x /usr/local/bin/beast
+
+# # Final verification
 RUN beast -beagle_info
 
 CMD ["/bin/bash"]
