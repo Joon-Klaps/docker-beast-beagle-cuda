@@ -1,7 +1,7 @@
 #!/bin/bash
 
-BEAST_VERSION='v10.5.0'
-BROWSER_DOWNLOAD_URL='https://github.com/beast-dev/beast-mcmc/releases/download/v10.5.0/BEAST_X_v10.5.0.tgz'
+BEAST_VERSION='v10.5.1-beta1'
+BROWSER_DOWNLOAD_URL='https://github.com/beast-dev/beast-mcmc/releases/download/v10.5.1-beta1/BEAST_X_v10.5.1-beta1.tgz'
 # uncomment when out of pre-release:
 wget --quiet ${BROWSER_DOWNLOAD_URL} -O BEAST${BEAST_VERSION}.tgz
 
