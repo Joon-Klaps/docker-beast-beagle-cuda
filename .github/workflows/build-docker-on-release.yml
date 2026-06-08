@@ -9,9 +9,11 @@ jobs:
     build-and-push:
         name: Rename the version and build to docker hub
         runs-on: ubuntu-latest
+        permissions:
+            contents: write
         env:
             DOCKERHUB_PASS: ${{ secrets.DOCKERHUB_PASS }}
-            GITHUB_TOKEN: ${{ secrets.KLAPS_BOT_AUTH_TOKEN }}
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         steps:
             - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
               with:
