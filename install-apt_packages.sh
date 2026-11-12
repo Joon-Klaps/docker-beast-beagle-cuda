@@ -32,7 +32,7 @@ ln -s /usr/bin/g++-9 /usr/local/cuda/bin/g++
 DEBIAN_PLATFORM="$(lsb_release -c -s)"
 echo "Debian platform: $DEBIAN_PLATFORM"
 
-# Add source for gcloud sdk, using a dedicated keyring since apt-key is deprecated
+# Add source for gcloud cli (the package was renamed from google-cloud-sdk), using a dedicated keyring since apt-key is deprecated
 install -d -m 0755 /usr/share/keyrings
 curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
 echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" > /etc/apt/sources.list.d/google-cloud-sdk.list
@@ -40,7 +40,7 @@ echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.clou
 # Install gcloud and aws
 apt-get update
 apt-get install -y -qq --no-install-recommends \
-	google-cloud-sdk awscli
+	google-cloud-cli awscli
 
 # Upgrade and clean
 apt-get upgrade -y
